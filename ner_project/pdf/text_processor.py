@@ -42,7 +42,7 @@ class TextProcessor:
             if not text.strip():
                 return {
                     'success': False,
-                    'message': '❌ Lütfen işlenecek metni girin.',
+                    'message': ' Lütfen işlenecek metni girin.',
                     'original_text': text,
                     'processed_text': '',
                     'entities_found': [],
@@ -58,7 +58,7 @@ class TextProcessor:
             if not entities:
                 return {
                     'success': True,
-                    'message': '⚠️ Metinde kişisel bilgi tespit edilmedi.',
+                    'message': ' Metinde kişisel bilgi tespit edilmedi.',
                     'original_text': text,
                     'processed_text': text,
                     'entities_found': [],
@@ -86,13 +86,13 @@ class TextProcessor:
                 replacement_stats = self.validators.get_replacement_statistics()
                 usage_report = self.validators.get_usage_report()
                 
-                success_message = f"✅ Metin başarıyla işlendi! {successful_replacements}/{len(processed_entities)} benzersiz ve tutarlı değişiklik yapıldı."
+                success_message = f" Metin başarıyla işlendi! {successful_replacements}/{len(processed_entities)} benzersiz ve tutarlı değişiklik yapıldı."
                 
                 # Add consistency info
                 if consistency_check['is_consistent']:
                     success_message += " Tutarlılık sağlandı."
                 else:
-                    success_message += f" ⚠️ {consistency_check['total_violations']} tutarlılık ihlali tespit edildi!"
+                    success_message += f"  {consistency_check['total_violations']} tutarlılık ihlali tespit edildi!"
                 
                 if successful_replacements < len(processed_entities):
                     remaining = len(processed_entities) - successful_replacements
@@ -101,7 +101,7 @@ class TextProcessor:
             else:  # censor
                 processed_entities = self.validators.apply_censoring_strategy(entities)
                 processed_text = self._apply_censoring_to_text(text, processed_entities)
-                success_message = f"✅ Metin başarıyla sansürlendi! {len(processed_entities)} kişisel bilgi sansürlendi."
+                success_message = f" Metin başarıyla sansürlendi! {len(processed_entities)} kişisel bilgi sansürlendi."
                 replacement_stats = {}
                 usage_report = {}
 
@@ -122,7 +122,7 @@ class TextProcessor:
             self.logger.error(f"Text processing error: {e}", exc_info=True)
             return {
                 'success': False,
-                'message': f"❌ Metin işleme hatası: {str(e)}",
+                'message': f" Metin işleme hatası: {str(e)}",
                 'original_text': text,
                 'processed_text': '',
                 'entities_found': [],
@@ -148,7 +148,7 @@ class TextProcessor:
             if not texts:
                 return {
                     'success': False,
-                    'message': '❌ İşlenecek metin listesi boş.',
+                    'message': ' İşlenecek metin listesi boş.',
                     'results': []
                 }
 
@@ -200,13 +200,13 @@ class TextProcessor:
                     len([e for e in r['entities_found'] if e.get('replacement') != e.get('word')])
                     for r in results
                 )
-                message = f"✅ {len(texts)} metin işlendi! {total_successful_replacements}/{total_entities} benzersiz ve tutarlı değişiklik yapıldı."
+                message = f" {len(texts)} metin işlendi! {total_successful_replacements}/{total_entities} benzersiz ve tutarlı değişiklik yapıldı."
                 
                 # Add consistency info
                 if consistency_report['total_consistent_mappings'] > 0:
                     message += f" {consistency_report['total_consistent_mappings']} tutarlı eşleme kullanıldı."
             else:
-                message = f"✅ {len(texts)} metin sansürlendi! {total_entities} kişisel bilgi sansürlendi."
+                message = f" {len(texts)} metin sansürlendi! {total_entities} kişisel bilgi sansürlendi."
 
             return {
                 'success': True,
@@ -224,7 +224,7 @@ class TextProcessor:
             self.logger.error(f"Batch text processing error: {e}", exc_info=True)
             return {
                 'success': False,
-                'message': f"❌ Toplu metin işleme hatası: {str(e)}",
+                'message': f" Toplu metin işleme hatası: {str(e)}",
                 'results': []
             }
 
@@ -455,7 +455,7 @@ class TextProcessor:
             return "Tespit edilen kişisel bilgi bulunmamaktadır."
 
         formatted_lines = []
-        formatted_lines.append("### 🔍 Tespit Edilen Kişisel Bilgiler:\n")
+        formatted_lines.append("###  Tespit Edilen Kişisel Bilgiler:\n")
 
         # Group by entity type
         grouped = {}
@@ -467,15 +467,15 @@ class TextProcessor:
 
         # Turkish names for entity types
         type_names = {
-            'ad_soyad': '👤 Ad Soyad',
-            'telefon': '📞 Telefon',
-            'email': '📧 E-mail',
-            'adres': '🏠 Adres',
-            'sirket': '🏢 Şirket',
-            'iban': '💳 IBAN',
-            'tarih': '📅 Tarih',
-            'para': '💰 Para',
-            'tc_kimlik': '🆔 TC Kimlik'
+            'ad_soyad': ' Ad Soyad',
+            'telefon': ' Telefon',
+            'email': ' E-mail',
+            'adres': ' Adres',
+            'sirket': ' Şirket',
+            'iban': ' IBAN',
+            'tarih': ' Tarih',
+            'para': ' Para',
+            'tc_kimlik': ' TC Kimlik'
         }
 
         for entity_type, type_entities in grouped.items():
@@ -524,18 +524,18 @@ class TextProcessor:
             return "Henüz replacement kullanımı bulunmamaktadır."
 
         formatted_lines = []
-        formatted_lines.append("### 📈 Replacement Kullanım Raporu:\n")
+        formatted_lines.append("###  Replacement Kullanım Raporu:\n")
 
         type_names = {
-            'ad_soyad': '👤 Ad Soyad',
-            'telefon': '📞 Telefon',
-            'email': '📧 E-mail',
-            'adres': '🏠 Adres',
-            'sirket': '🏢 Şirket',
-            'iban': '💳 IBAN',
-            'tarih': '📅 Tarih',
-            'para': '💰 Para',
-            'tc_kimlik': '🆔 TC Kimlik'
+            'ad_soyad': ' Ad Soyad',
+            'telefon': ' Telefon',
+            'email': ' E-mail',
+            'adres': ' Adres',
+            'sirket': ' Şirket',
+            'iban': ' IBAN',
+            'tarih': ' Tarih',
+            'para': ' Para',
+            'tc_kimlik': ' TC Kimlik'
         }
 
         for entity_type, details in usage_report['entity_type_details'].items():
@@ -557,7 +557,7 @@ class TextProcessor:
             return "Henüz tutarlı eşleme bulunmamaktadır."
 
         formatted_lines = []
-        formatted_lines.append("### 🔄 Tutarlılık Raporu:\n")
+        formatted_lines.append("###  Tutarlılık Raporu:\n")
         formatted_lines.append(f"**Toplam tutarlı eşleme:** {consistency_report['total_consistent_mappings']}\n")
 
         # Group by length for better readability
@@ -569,5 +569,6 @@ class TextProcessor:
                 formatted_lines.append(f"  {length_indicator} `{mapping['original']}` → `{mapping['replacement']}`")
             
             formatted_lines.append("")
+
 
         return "\n".join(formatted_lines)
