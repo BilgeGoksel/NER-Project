@@ -93,7 +93,7 @@ def fetch_complaint(url, sirket, title, idx):
             "Çekilme Tarihi": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
         append_to_excel(result)
-        print(f"💾 Yazıldı: {title}")
+        print(f" Yazıldı: {title}")
     except Exception as e:
         result = {
             "ID": idx,
@@ -104,7 +104,7 @@ def fetch_complaint(url, sirket, title, idx):
             "Çekilme Tarihi": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
         append_to_excel(result)
-        print(f"⚠️ Hata yazıldı: {title}")
+        print(f" Hata yazıldı: {title}")
     finally:
         driver.quit()
     return result
@@ -121,17 +121,17 @@ def main():
         futures = []
 
         for sirket in sirketler:
-            print(f"\n📁 Şirket: {sirket}")
+            print(f"\n Şirket: {sirket}")
             driver = create_driver()
             try:
                 for page in range(1, 5):
                     url = f"https://www.sikayetvar.com/sikayetler?k={sirket}&page={page}"
-                    print(f"  🌐 Sayfa {page}: {url}")
+                    print(f"   Sayfa {page}: {url}")
                     driver.get(url)
                     time.sleep(3)
                     links = driver.find_elements(By.CSS_SELECTOR, "h2.complaint-title a")
                     if not links:
-                        print("    ⛔ Link bulunamadı, sonraki şirkete geçiliyor.")
+                        print("     Link bulunamadı, sonraki şirkete geçiliyor.")
                         break
 
                     for link in links:
@@ -139,7 +139,7 @@ def main():
                         if not title:
                             continue
                         if title in yazilan_basliklar:
-                            print(f"    ➡️ '{title}' başlığı zaten yazılmış, atlanıyor.")
+                            print(f"     '{title}' başlığı zaten yazılmış, atlanıyor.")
                             continue
 
                         idx += 1
@@ -147,7 +147,7 @@ def main():
                         yazilan_basliklar.add(title)
                         futures.append(executor.submit(fetch_complaint, href, sirket, title, idx))
             except Exception as e:
-                print(f"  ❌ Hata: {e}")
+                print(f"   Hata: {e}")
             finally:
                 driver.quit()
 
@@ -155,7 +155,8 @@ def main():
         for future in as_completed(futures):
             future.result()
 
-    print(f"\n✅ Veri çekme işlemi tamamlandı. Excel yolu: {excel_file}")
+    print(f"\n Veri çekme işlemi tamamlandı. Excel yolu: {excel_file}")
 
 if __name__ == "__main__":
     main()
+
