@@ -33,7 +33,7 @@ class EnhancedAnonymizationApp:
         self.logger = logging.getLogger(__name__)
 
         # Model path
-        self.model_path = r"C:\Users\stj.skartal\Desktop\python\samet\ner_model_final"
+        self.model_path = r"your_model_path"
 
         # Initialize components
         self.extractor = PDFExtractor()
@@ -256,10 +256,10 @@ class EnhancedAnonymizationApp:
                                         progress=gr.Progress()) -> Tuple[Optional[str], str]:
         """Process PDF with real replacement using custom lists"""
         if pdf_file is None:
-            return None, "❌ Please upload a PDF file."
+            return None, " Please upload a PDF file."
 
         if self.ner_pipeline is None:
-            return None, "❌ NER model could not be loaded. Check model path."
+            return None, " NER model could not be loaded. Check model path."
 
         # Clear cache for each new processing
         self.validators.replacement_cache.clear()
@@ -286,7 +286,7 @@ class EnhancedAnonymizationApp:
             full_text = " ".join([block['text'] for block in text_blocks])
 
             if not full_text.strip():
-                return None, "⚠️ No text could be extracted from PDF."
+                return None, " No text could be extracted from PDF."
 
             progress(0.2, desc="Running NER analysis...")
 
@@ -296,7 +296,7 @@ class EnhancedAnonymizationApp:
             )
 
             if not entities_detected:
-                return None, "⚠️ No personal information detected in PDF."
+                return None, " No personal information detected in PDF."
 
             progress(0.4, desc="Applying replacement strategy...")
 
@@ -311,26 +311,26 @@ class EnhancedAnonymizationApp:
             )
 
             if not success:
-                return None, "❌ PDF replacement operation failed."
+                return None, " PDF replacement operation failed."
 
             progress(1.0, desc="Completed!")
 
-            status_msg = f"✅ Operation completed! {len(processed_entities)} replacements made."
+            status_msg = f" Operation completed! {len(processed_entities)} replacements made."
             
             return output_path, status_msg
 
         except Exception as e:
             self.logger.error(f"PDF processing error: {e}", exc_info=True)
-            return None, f"❌ Critical error: {str(e)}"
+            return None, f" Critical error: {str(e)}"
 
     def process_pdf_with_censoring(self, pdf_file, confidence_threshold: float, 
                                  progress=gr.Progress()) -> Tuple[Optional[str], str]:
         """Process PDF with censoring (asterisk characters)"""
         if pdf_file is None:
-            return None, "❌ Please upload a PDF file."
+            return None, " Please upload a PDF file."
 
         if self.ner_pipeline is None:
-            return None, "❌ NER model could not be loaded. Check model path."
+            return None, " NER model could not be loaded. Check model path."
 
         # Clear cache for each new processing
         self.validators.replacement_cache.clear()
@@ -357,7 +357,7 @@ class EnhancedAnonymizationApp:
             full_text = " ".join([block['text'] for block in text_blocks])
 
             if not full_text.strip():
-                return None, "⚠️ No text could be extracted from PDF."
+                return None, "⚠No text could be extracted from PDF."
 
             progress(0.2, desc="Running NER analysis...")
 
@@ -367,7 +367,7 @@ class EnhancedAnonymizationApp:
             )
 
             if not entities_detected:
-                return None, "⚠️ No personal information detected in PDF."
+                return None, " No personal information detected in PDF."
 
             progress(0.4, desc="Applying censoring strategy...")
 
@@ -382,23 +382,23 @@ class EnhancedAnonymizationApp:
             )
 
             if not success:
-                return None, "❌ PDF censoring operation failed."
+                return None, " PDF censoring operation failed."
 
             progress(1.0, desc="Completed!")
 
-            status_msg = f"✅ Censoring completed! {len(processed_entities)} personal information censored."
+            status_msg = f" Censoring completed! {len(processed_entities)} personal information censored."
             
             return output_path, status_msg
 
         except Exception as e:
             self.logger.error(f"PDF censoring error: {e}", exc_info=True)
-            return None, f"❌ Critical error: {str(e)}"
+            return None, f" Critical error: {str(e)}"
 
     # NEW METHODS FOR TEXT PROCESSING
     def process_manual_text_replacement(self, text: str, confidence_threshold: float) -> Tuple[str, str, str]:
         """Process manual text with replacement strategy"""
         if self.ner_pipeline is None:
-            return "", "❌ NER modeli yüklenemedi. Model yolunu kontrol edin.", ""
+            return "", " NER modeli yüklenemedi. Model yolunu kontrol edin.", ""
         
         # Clear cache for each processing
         self.validators.replacement_cache.clear()
@@ -414,7 +414,7 @@ class EnhancedAnonymizationApp:
     def process_manual_text_censoring(self, text: str, confidence_threshold: float) -> Tuple[str, str, str]:
         """Process manual text with censoring strategy"""
         if self.ner_pipeline is None:
-            return "", "❌ NER modeli yüklenemedi. Model yolunu kontrol edin.", ""
+            return "", " NER modeli yüklenemedi. Model yolunu kontrol edin.", ""
         
         # Clear cache for each processing
         self.validators.replacement_cache.clear()
@@ -443,13 +443,13 @@ class EnhancedAnonymizationApp:
 
         with gr.Blocks(css=css, title="PDF Personal Information Anonymizer - Advanced", theme=theme) as interface:
             gr.Markdown("""
-            # 🔐 PDF Personal Information Anonymizer — Advanced Version
+            #  PDF Personal Information Anonymizer — Advanced Version
             **Anonymize personal information in PDFs and text with AI-powered detection**
             """)
 
             with gr.Tabs():
                 # TAB 1: Replacement (with Custom Lists)
-                with gr.Tab("🔄 PDF Replacement (Custom Lists)", elem_classes="tab-nav"):
+                with gr.Tab(" PDF Replacement (Custom Lists)", elem_classes="tab-nav"):
                     gr.Markdown("""
                     ### PDF Replacement with Custom Lists
                     Personal information is replaced with similar realistic data while preserving length.
@@ -458,31 +458,31 @@ class EnhancedAnonymizationApp:
                     with gr.Row():
                         with gr.Column(scale=1):
                             pdf_input_replace = gr.File(
-                                label="📎 Upload PDF File",
+                                label=" Upload PDF File",
                                 file_types=[".pdf"],
                                 type="filepath"
                             )
 
                             confidence_threshold_replace = gr.Slider(
                                 minimum=0.1, maximum=1.0, value=0.7, step=0.1,
-                                label="🎯 Confidence Threshold"
+                                label=" Confidence Threshold"
                             )
 
                             process_btn_replace = gr.Button(
-                                "🚀 Start Replacement Process",
+                                " Start Replacement Process",
                                 variant="primary",
                                 interactive=bool(self.ner_pipeline)
                             )
 
                             if not self.ner_pipeline:
-                                gr.Markdown("⚠️ **Warning**: Process cannot start because model could not be loaded.")
+                                gr.Markdown(" **Warning**: Process cannot start because model could not be loaded.")
 
                         with gr.Column(scale=1):
                             output_pdf_replace = gr.File(label="📤 Replaced PDF", file_count="single")
                             status_text_replace = gr.Markdown("")
 
                 # TAB 2: Censoring (with asterisk characters)
-                with gr.Tab("🚫 PDF Censoring (Asterisk)", elem_classes="tab-nav"):
+                with gr.Tab(" PDF Censoring (Asterisk)", elem_classes="tab-nav"):
                     gr.Markdown("""
                     ### PDF Censoring with Asterisk (*) Characters
                     Personal information is detected and replaced with asterisks matching character count.
@@ -492,31 +492,31 @@ class EnhancedAnonymizationApp:
                     with gr.Row():
                         with gr.Column(scale=1):
                             pdf_input_censor = gr.File(
-                                label="📎 Upload PDF File",
+                                label=" Upload PDF File",
                                 file_types=[".pdf"],
                                 type="filepath"
                             )
 
                             confidence_threshold_censor = gr.Slider(
                                 minimum=0.1, maximum=1.0, value=0.7, step=0.1,
-                                label="🎯 Confidence Threshold"
+                                label=" Confidence Threshold"
                             )
 
                             process_btn_censor = gr.Button(
-                                "🚫 Start Censoring Process",
+                                " Start Censoring Process",
                                 variant="secondary",
                                 interactive=bool(self.ner_pipeline)
                             )
 
                             if not self.ner_pipeline:
-                                gr.Markdown("⚠️ **Warning**: Process cannot start because model could not be loaded.")
+                                gr.Markdown(" **Warning**: Process cannot start because model could not be loaded.")
 
                         with gr.Column(scale=1):
                             output_pdf_censor = gr.File(label="📤 Censored PDF", file_count="single")
                             status_text_censor = gr.Markdown("")
 
                 # TAB 3: Text Processing (NEW)
-                with gr.Tab("📝 Text Processing", elem_classes="tab-nav"):
+                with gr.Tab(" Text Processing", elem_classes="tab-nav"):
                     gr.Markdown("""
                     ### Manual Text Processing with AI
                     Enter text manually and choose between replacement or censoring strategies.
@@ -525,7 +525,7 @@ class EnhancedAnonymizationApp:
 
                     with gr.Row():
                         with gr.Column(scale=1):
-                            gr.Markdown("#### 📝 Input Text")
+                            gr.Markdown("####  Input Text")
                             
                             manual_text_input = gr.Textbox(
                                 label="Enter text to process",
@@ -536,29 +536,29 @@ class EnhancedAnonymizationApp:
 
                             confidence_threshold_text = gr.Slider(
                                 minimum=0.1, maximum=1.0, value=0.7, step=0.1,
-                                label="🎯 Confidence Threshold"
+                                label=" Confidence Threshold"
                             )
 
                             with gr.Row():
                                 text_replace_btn = gr.Button(
-                                    "🔄 Replace with Fake Data",
+                                    " Replace with Fake Data",
                                     variant="primary",
                                     interactive=bool(self.ner_pipeline),
                                     scale=1
                                 )
 
                                 text_censor_btn = gr.Button(
-                                    "🚫 Censor with Asterisks",
+                                    " Censor with Asterisks",
                                     variant="secondary",
                                     interactive=bool(self.ner_pipeline),
                                     scale=1
                                 )
 
                             if not self.ner_pipeline:
-                                gr.Markdown("⚠️ **Warning**: Processing cannot start because model could not be loaded.")
+                                gr.Markdown(" **Warning**: Processing cannot start because model could not be loaded.")
 
                         with gr.Column(scale=1):
-                            gr.Markdown("#### 📤 Processed Output")
+                            gr.Markdown("####  Processed Output")
                             
                             processed_text_output = gr.Textbox(
                                 label="Processed Text",
@@ -638,4 +638,5 @@ class EnhancedAnonymizationApp:
 if __name__ == "__main__":
     app = EnhancedAnonymizationApp()
     demo = app.create_enhanced_interface()
+
     demo.launch(server_name="0.0.0.0", server_port=7860, show_error=True)
