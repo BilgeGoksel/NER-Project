@@ -175,7 +175,7 @@ def process_sikayetvar_excel_to_jsonl(
                 print(f"[index={i}] Satır işlenemedi: {e}")
                 continue
 
-    print(f"\n✅ Tamamlandı: JSONL çıktısı → '{output_jsonl_path}'")
+    print(f"\n Tamamlandı: JSONL çıktısı → '{output_jsonl_path}'")
 
 # --- Çalıştırma ---
 if __name__ == "__main__":
@@ -185,3 +185,4 @@ if __name__ == "__main__":
         output_dir="data",
         output_filename="etiketli_veri.jsonl"
     )
+
